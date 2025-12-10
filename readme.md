@@ -9,7 +9,7 @@ Aucun backend n'est nécessaire. Ouvrez simplement `index.html` dans votre navig
 python -m http.server 8000
 ```
 
-Puis rendez-vous sur [http://localhost:8000](http://localhost:8000). La page récupère les provinces depuis le paquet `world-atlas` (TopoJSON `states-provinces-50m.json`) et les projette via D3.
+Puis rendez-vous sur [http://localhost:8000](http://localhost:8000). La page récupère les provinces depuis le paquet `world-atlas` (TopoJSON `world/50m.json`, largement mis en cache sur les CDN) et les projette via D3 ; en cas de problème réseau, un message d'erreur est ajouté dans le journal.
 
 ## Contrôles
 - **Lecture / Pause** : démarre ou arrête la simulation des tours.

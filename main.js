@@ -25,7 +25,9 @@ const ERAS = {
   2025: { label: 'Monde contemporain', startYear: 2025 },
 };
 
-const WORLD_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/states-provinces-50m.json';
+// Fallback to the widely mirrored world/50m TopoJSON from world-atlas; avoid the
+// previously broken states-provinces path that returned a 404.
+const WORLD_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/world/50m.json';
 
 const CULTURE_PALETTE = new Map();
 const provinces = [];
@@ -60,9 +62,15 @@ function hashCode(str) {
 
 async function ensureWorldData() {
   if (loadedTopology) return loadedTopology;
-  const response = await fetch(WORLD_URL);
-  loadedTopology = await response.json();
-  return loadedTopology;
+  try {
+    const response = await fetch(WORLD_URL);
+    if (!response.ok) throw new Error(`Impossible de charger la carte (${response.status})`);
+    loadedTopology = await response.json();
+    return loadedTopology;
+  } catch (error) {
+    logEvent(`Erreur de chargement de la carte : ${error.message}`);
+    throw error;
+  }
 }
 
 function getFeatureCollection(topology) {
@@ -79,7 +87,7 @@ function resetSimulation() {
   stop();
   provinces.length = 0;
   CULTURE_PALETTE.clear();
-  seedEra(currentEra);
+  seedEra(currentEra).catch((error) => logEvent(`Impossible de réinitialiser : ${error.message}`));
   updateHUD();
   renderMap();
 }
@@ -192,6 +200,7 @@ function stepSimulation() {
 }
 
 function renderMap() {
+  if (!geoPath || !projection) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   provinces.forEach((province) => {
     ctx.beginPath();
@@ -262,6 +271,10 @@ function stop() {
 }
 
 function handlePointer(event) {
+  if (!projection || !geoPath || !provinces.length) {
+    tooltip.style.opacity = 0;
+    return;
+  }
   const rect = canvas.getBoundingClientRect();
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
@@ -299,7 +312,7 @@ function setupInteractions() {
   });
 
   stepBtn.addEventListener('click', stepSimulation);
-  resetBtn.addEventListener('click', () => seedEra(currentEra));
+  resetBtn.addEventListener('click', () => seedEra(currentEra).catch((error) => logEvent(`Impossible de relancer : ${error.message}`)));
   speedSlider.addEventListener('input', () => {
     if (timer) {
       stop();
@@ -312,7 +325,7 @@ function setupInteractions() {
   eraSelect.addEventListener('change', (event) => {
     currentEra = event.target.value;
     stop();
-    seedEra(currentEra);
+    seedEra(currentEra).catch((error) => logEvent(`Impossible de charger l'époque : ${error.message}`));
   });
 
   countrySelect.addEventListener('change', (event) => {
@@ -326,4 +339,4 @@ function setupInteractions() {
 }
 
 setupInteractions();
-seedEra(currentEra);
+seedEra(currentEra).catch((error) => logEvent(`Impossible de démarrer : ${error.message}`));

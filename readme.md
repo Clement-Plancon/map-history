@@ -1,6 +1,6 @@
 # Chroniques d'Atlas
 
-Prototype de jeu web inspiré de [Pax Historia](https://www.paxhistoria.co/) : une carte du monde divisée en grandes provinces où des cultures rivales étendent leurs territoires, se disputent des provinces et font évoluer la population au fil des années.
+Prototype de jeu web inspiré de [Pax Historia](https://www.paxhistoria.co/) : une carte du monde divisée en provinces réelles couvrant tous les continents, où des cultures rivales étendent leurs territoires, se disputent des provinces et font évoluer la population au fil des années.
 
 ## Lancer le prototype
 Aucun backend n'est nécessaire. Ouvrez simplement `index.html` dans votre navigateur ou servez le dossier avec un serveur statique :
@@ -23,4 +23,4 @@ Puis rendez-vous sur [http://localhost:8000](http://localhost:8000).
 - Le journal recense les conquêtes et unifications récentes.
 
 ## Adapter les règles
-Toutes les règles de génération, de croissance démographique et de combat se trouvent dans `main.js`. Les provinces sont définies dans `PROVINCES` avec leurs polygones (coordonnées normalisées au canvas), leurs régions et leurs voisins dans `NEIGHBORS`. Modifiez les presets d'époque dans `ERA_PRESETS` pour ajuster les cultures de départ, ou les fonctions `tick` et `createWorld` pour explorer d'autres mécaniques.
+Toutes les règles de génération, de croissance démographique et de combat se trouvent dans `main.js`. Les provinces sont définies dans `PROVINCES` avec leurs polygones (coordonnées normalisées au canvas) et les cultures de départ pour chaque époque (1444 → 2025). Les relations de voisinage sont listées dans `NEIGHBORS` pour piloter la conquête. Ajustez les dates dans `ERAS`, affinez les cultures des provinces ou modifiez les fonctions `tick` et `createWorld` pour explorer d'autres mécaniques.

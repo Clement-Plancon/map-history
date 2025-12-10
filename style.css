@@ -64,6 +64,29 @@ h2 {
   align-items: center;
 }
 
+.select {
+  display: grid;
+  grid-template-columns: auto minmax(180px, 1fr);
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.select select {
+  background: transparent;
+  color: var(--fg);
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 6px 4px;
+  outline: none;
+}
+
 .hero__stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -196,6 +219,12 @@ main { padding: 0 5vw 64px; }
   padding: 12px 14px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   align-items: center;
+}
+
+.scoreboard__row--selected {
+  background: linear-gradient(90deg, rgba(125, 211, 252, 0.08), transparent);
+  border-color: rgba(125, 211, 252, 0.18);
+  font-weight: 700;
 }
 
 .scoreboard__row:last-child { border-bottom: none; }

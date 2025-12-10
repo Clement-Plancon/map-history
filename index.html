@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chroniques d'Atlas</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__content">
+      <p class="eyebrow">Prototype inspiré de Pax Historia</p>
+      <h1>Chroniques d'Atlas</h1>
+      <p class="lede">Fondez des cultures, observez des conquêtes et réécrivez l'histoire sur une carte mondiale réaliste.</p>
+      <div class="hero__actions">
+        <button id="playToggle" class="button">▶︎ Lecture</button>
+        <button id="step" class="button button--ghost">⏭ Tour suivant</button>
+        <button id="reset" class="button button--ghost">⟳ Réinitialiser</button>
+        <label class="select">
+          <span>Pays suivi</span>
+          <select id="countrySelect" aria-label="Choisir un pays à suivre">
+            <option value="">—</option>
+          </select>
+        </label>
+        <label class="select">
+          <span>Époque</span>
+          <select id="eraSelect" aria-label="Sélectionnez une époque">
+            <option value="1444">1444 — Ère des grands royaumes</option>
+            <option value="1789">1789 — Révolutions atlantiques</option>
+            <option value="1914">1914 — Monde en armes</option>
+            <option value="1945">1945 — Reconstruction</option>
+            <option value="1991">1991 — Nouvel ordre</option>
+            <option value="2025" selected>2025 — Monde contemporain</option>
+          </select>
+        </label>
+      </div>
+      <div class="hero__stats">
+        <span>Année <strong id="year">0</strong></span>
+        <span>Époque <strong id="eraLabel">—</strong></span>
+        <span>Culture dominante : <strong id="dominantCulture">—</strong></span>
+        <span>Population totale : <strong id="population">0</strong></span>
+        <span>Pays suivi : <strong id="playerCountryLabel">—</strong></span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="layout">
+      <div class="panel">
+        <div class="panel__heading">
+          <div>
+            <p class="eyebrow">Carte dynamique</p>
+            <h2>Territoires vivants</h2>
+          </div>
+          <label class="slider">
+            <span>Vitesse</span>
+            <input id="speed" type="range" min="150" max="1200" step="50" value="450" />
+          </label>
+        </div>
+        <canvas id="map" width="960" height="576" aria-label="Carte stratégique"></canvas>
+        <div id="tooltip" class="tooltip" role="status" aria-live="polite"></div>
+        <p class="hint">Les provinces s'étendent, fusionnent et se disputent les ressources sur une carte du monde détaillée.</p>
+        <div class="scoreboard" aria-live="polite">
+          <div class="scoreboard__row scoreboard__row--header">
+            <span>Culture</span>
+            <span>Provinces</span>
+            <span>Population</span>
+            <span>Momentum</span>
+          </div>
+          <div id="scoreRows" class="scoreboard__body"></div>
+        </div>
+      </div>
+
+      <aside class="panel panel--secondary">
+        <div class="panel__heading">
+          <div>
+            <p class="eyebrow">Journal</p>
+            <h2>Événements récents</h2>
+          </div>
+          <button id="clearLog" class="button button--ghost button--small">Effacer</button>
+        </div>
+        <ol id="log" class="log" aria-live="polite"></ol>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Prototype local — aucun serveur requis. Modifiez <code>main.js</code> pour ajuster la génération, les cultures et les règles de combat.</p>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

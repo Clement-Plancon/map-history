@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { GameChoice, GameEvent, GameLogEntry, GameState, Scenario, GameStats } from '../types';
+import MAP_REGIONS from '../data/mapRegions';
 
 const STORAGE_KEY = 'paxSandbox_save';
 
@@ -24,6 +25,17 @@ const pickEvent = (scenario: Scenario, turn: number): GameEvent | undefined => {
   return pool[index];
 };
 
+const buildInitialRegions = (scenario: Scenario) => {
+  const control: Record<string, string> = {};
+  const factionIds = new Set(scenario.factions.map((f) => f.id));
+  MAP_REGIONS.forEach((region) => {
+    if (region.defaultFactionId && factionIds.has(region.defaultFactionId)) {
+      control[region.id] = region.defaultFactionId;
+    }
+  });
+  return control;
+};
+
 export const useGameEngine = () => {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [currentEvent, setCurrentEvent] = useState<GameEvent | null>(null);
@@ -34,10 +46,13 @@ export const useGameEngine = () => {
     if (saved) {
       try {
         const parsed = JSON.parse(saved) as GameState;
-        setGameState(parsed);
-        const event = pickEvent(parsed.scenario, parsed.currentTurn);
-        setCurrentEvent(event ?? parsed.scenario.eventDeck[0]);
-        setPendingScenario(parsed.scenario);
+        const withRegions = parsed.regionsControl
+          ? parsed
+          : { ...parsed, regionsControl: buildInitialRegions(parsed.scenario) };
+        setGameState(withRegions);
+        const event = pickEvent(withRegions.scenario, withRegions.currentTurn);
+        setCurrentEvent(event ?? withRegions.scenario.eventDeck[0]);
+        setPendingScenario(withRegions.scenario);
       } catch (err) {
         console.error('Failed to parse save', err);
         localStorage.removeItem(STORAGE_KEY);
@@ -59,7 +74,8 @@ export const useGameEngine = () => {
       year: scenario.yearStart,
       stats: { ...scenario.initialStats },
       log: [],
-      isGameOver: false
+      isGameOver: false,
+      regionsControl: buildInitialRegions(scenario)
     };
     setPendingScenario(scenario);
     setGameState(initialState);
@@ -102,7 +118,8 @@ export const useGameEngine = () => {
       stats: updatedStats,
       log: [...gameState.log, logEntry],
       isGameOver: !!endingSummary,
-      endingSummary
+      endingSummary,
+      regionsControl: gameState.regionsControl
     };
 
     const nextEvent = endingSummary ? null : pickEvent(gameState.scenario, nextTurn) ?? currentEvent;
@@ -118,6 +135,21 @@ export const useGameEngine = () => {
     setPendingScenario(null);
   };
 
+  const setRegionControl = (regionId: string, factionId: string | null) => {
+    setGameState((prev) => {
+      if (!prev) return prev;
+      const updated = { ...prev.regionsControl };
+      if (factionId) {
+        updated[regionId] = factionId;
+      } else {
+        delete updated[regionId];
+      }
+      const nextState = { ...prev, regionsControl: updated };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(nextState));
+      return nextState;
+    });
+  };
+
   return {
     gameState,
     pendingScenario,
@@ -126,6 +158,7 @@ export const useGameEngine = () => {
     advanceTurn,
     getCurrentEvent,
     clearSave,
-    setPendingScenario
+    setPendingScenario,
+    setRegionControl
   };
 };

@@ -54,6 +54,14 @@ export type GameEvent = {
   choices: GameChoice[];
 };
 
+export type MapRegion = {
+  id: string;
+  name: string;
+  polygon: [number, number][];
+  defaultFactionId?: string;
+  labelPosition?: { x: number; y: number };
+};
+
 export type Scenario = {
   id: string;
   title: string;
@@ -86,4 +94,5 @@ export type GameState = {
   log: GameLogEntry[];
   isGameOver: boolean;
   endingSummary?: string;
+  regionsControl: Record<string, string>;
 };

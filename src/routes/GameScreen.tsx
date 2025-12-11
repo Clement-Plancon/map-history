@@ -43,7 +43,7 @@ const GameScreen = () => {
       />
 
       {/* World History Map - Paradox-style interactive map */}
-      <WorldMap initialYear={1939} />
+      <WorldMap initialYear={1444} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 space-y-4">

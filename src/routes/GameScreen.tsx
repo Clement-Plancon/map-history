@@ -42,13 +42,13 @@ const GameScreen = () => {
         hasSave={!!gameState}
       />
 
+      {/* Main Map - Full width for better visibility */}
+      <GameMap scenario={selectedScenario} gameState={gameState} />
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 space-y-4">
           <GameHUD gameState={gameState} />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <StatsPanel gameState={gameState} />
-            <GameMap scenario={selectedScenario} gameState={gameState} />
-          </div>
+          <StatsPanel gameState={gameState} />
           <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-4 text-white">
             <p className="text-xs uppercase tracking-[0.2em] text-pax-muted">Factions</p>
             <h3 className="text-lg font-semibold">Power Map</h3>

@@ -5,7 +5,7 @@ import GameHUD from '../components/game/GameHUD';
 import StatsPanel from '../components/game/StatsPanel';
 import TurnActions from '../components/game/TurnActions';
 import EventLog from '../components/game/EventLog';
-import GameMap from '../components/map/GameMap';
+import WorldMap from '../components/map/WorldMap';
 import { useGameEngine } from '../hooks/useGameEngine';
 import { Scenario } from '../types';
 import scenarios from '../data/scenarios';
@@ -42,8 +42,8 @@ const GameScreen = () => {
         hasSave={!!gameState}
       />
 
-      {/* Main Map - Full width for better visibility */}
-      <GameMap scenario={selectedScenario} gameState={gameState} />
+      {/* World History Map - Paradox-style interactive map */}
+      <WorldMap initialYear={1444} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 space-y-4">
